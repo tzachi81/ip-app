@@ -1,5 +1,6 @@
-import { IDomain } from "../../types/domain.types";
-import { DomainItem } from "./DomainItem";
+import classes from './DomainList.module.scss';
+import { IDomain } from '../../types/domain.types';
+import { DomainItem } from './DomainItem';
 
 interface IDomainHistory {
   domainHistory: IDomain[];
@@ -8,8 +9,8 @@ interface IDomainHistory {
 export const DomainsList: React.FC<IDomainHistory> = ({ domainHistory }) => {
   return (
     <>
-      <h2>Domain History</h2>
-      <ul>
+      {/* <h2>Domain History</h2> */}
+      <ul className={classes.list}>
         {domainHistory.map((domainItem, index) => (
           <DomainItem key={index} domainItem={domainItem} />
         ))}
