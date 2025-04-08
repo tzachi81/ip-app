@@ -2,9 +2,10 @@ import os from 'os';
 import { Request, Response } from 'express';
 import { Router } from 'express';
 
+export const ipRoute = Router();
 
 // Handles internal and public IP addresses
-const getIp = (request: Request, response: Response) => {
+ipRoute.get('/', (request: Request, response: Response) => {
     const osInterfaces = os.networkInterfaces();
     //Checks protocol type (got this reference from 'iifx blog - https://iifx.dev/en/articles/15736711")
     const internalIP = Object.values(osInterfaces)
@@ -18,7 +19,4 @@ const getIp = (request: Request, response: Response) => {
         internalIP: internalIP ? internalIP.address : 'Not found',
         publicIP: publicIP,
     });
-}
-
-export const ipRoute = Router();
-ipRoute.get('/', getIp);
+});

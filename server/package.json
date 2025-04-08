@@ -5,11 +5,18 @@
   "license": "MIT",
   "scripts": {
     "start": "node dist/index.js",
+    "start:client": "cd ../client && yarn preview",
     "dev": "node -r ts-node/register --inspect src/index.ts",
+    "install:client": "cd ../client && yarn install",
+    "debug": "concurrently \"yarn dev\" \"yarn start:client\"",
+    "start:all": "concurrently \"yarn start\" \"yarn start:client\"",
     "build": "tsc",
+    "build:client": "cd ../client && yarn build",
+    "build:all": "yarn build && yarn build:client",
     "lint": "eslint ."
   },
   "dependencies": {
+    "concurrently": "^9.1.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",

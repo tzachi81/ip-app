@@ -1,13 +1,13 @@
-const API_BASE_URL = 'http://localhost:3000/api';
 
 
+const apiUrl = import.meta.env.API_URL || 'http://localhost:3000/api';
 //TODO: 
 // 1. Wrap as a service class, or
 // 2. Split these in two files: ipApi.ts and domainApi.ts
 
 //'/api/ip'
 export const fetchHostAddresses = async () => {
-    const response = await fetch(`${API_BASE_URL}/ip`);
+    const response = await fetch(`${apiUrl}/ip`);
     if (!response.ok) {
         throw new Error('Failed to fetch IP addresses');
     }
@@ -17,7 +17,7 @@ export const fetchHostAddresses = async () => {
 
 //'api/domains/'
 export const resolveDomain = async (domain: string) => {
-    const response = await fetch(`${API_BASE_URL}/domains/resolve`, {
+    const response = await fetch(`${apiUrl}/domains/resolve`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ export const resolveDomain = async (domain: string) => {
 };
 
 export const fetchDomainHistory = async () => {
-    const response = await fetch(`${API_BASE_URL}/domains/get`);
+    const response = await fetch(`${apiUrl}/domains/get`);
     if (!response.ok) {
         throw new Error('Failed to fetch domain history');
     }
