@@ -11,8 +11,8 @@ export const DomainsList: React.FC<IDomainHistory> = ({ domainHistory }) => {
     <>
       {/* <h2>Domain History</h2> */}
       <ul className={classes.list}>
-        {domainHistory.map((domainItem, index) => (
-          <DomainItem key={index} domainItem={domainItem} />
+        {domainHistory.map((domainItem) => (
+          <DomainItem key={domainItem.domain} domainItem={domainItem} />
         ))}
       </ul>
     </>
