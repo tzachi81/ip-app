@@ -1,26 +1,16 @@
 {
     "builds": [
-      {
-        "src": "client",
-        "use": "@vercel/vite"
-      },
-      {
-        "src": "server/src/index.ts",
-        "use": "@vercel/node"
-      }
+        {
+            "src": "client",
+            "use": "@vercel/vite"
+        },
+        {
+            "src": "server/package.json",
+            "use": "@vercel/node"
+        }
     ],
     "routes": [
-      {
-        "src": "/api/(.*)",
-        "dest": "server/src/index.ts"
-      },
-      {
-        "src": "/client/(.*\\.(css|scss|js|svg|png|jpg|jpeg|gif|webp|ico))(.*)",
-        "dest": "client/dist/$1$2"
-      },
-      {
-        "src": "/(.*)",
-        "dest": "client/dist/index.html"
-      }
+        { "src": "/api/(.*)", "dest": "/api/$1" },
+        { "src": "/(.*)", "dest": "/client/dist/index.html" }
     ]
-  }
+}

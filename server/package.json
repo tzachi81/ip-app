@@ -10,7 +10,7 @@
     "install:client": "cd ../client && yarn install",
     "debug": "concurrently \"yarn dev\" \"yarn start:client\"",
     "start:all": "concurrently \"yarn start\" \"yarn start:client\"",
-    "build": "tsc",
+    "build": "tsc -p tsconfig.json",
     "build:client": "cd ../client && yarn build",
     "build:all": "yarn build && yarn build:client",
     "lint": "eslint ."

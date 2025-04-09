@@ -4,7 +4,7 @@
   "main": "client/index.html",
   "scripts": {
     "build": "npm run build --prefix client && npm run build --prefix server",
-    "start": "node server/dist/index.js"
+    "start": "node server/index.js"
   },
   "repository": "https://github.com/tzachi81/ip-app.git",
   "author": "tzachi81 <tzahih@gmail.com>",
