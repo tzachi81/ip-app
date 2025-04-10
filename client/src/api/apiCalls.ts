@@ -1,5 +1,3 @@
-
-
 const apiUrl = import.meta.env.API_URL || 'http://localhost:3000/api';
 //TODO: 
 // 1. Wrap as a service class, or
