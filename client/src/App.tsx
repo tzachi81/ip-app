@@ -127,7 +127,7 @@ function App() {
 
           <ToastContainer position='bottom-center' closeOnClick theme='dark' />
 
-          <DomainsList domainHistory={domainHistory} />
+          {domainHistory.length > 0 && <DomainsList domainHistory={domainHistory}/>}
         </div>
       </main>
     </>
