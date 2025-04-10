@@ -11,11 +11,12 @@ dotenv.config();
 const app = express();
 
 const PORT = process.env.PORT || 3000;
-const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || 'http://localhost:5173' || 'http://localhost:4173';
+const ALLOWED_ORIGIN = (process.env.NODE_ENV === "production") ? process.env.ALLOWED_ORIGIN : 'http://localhost:5173';
+
 app.use(cors({
     origin: ALLOWED_ORIGIN,
-    methods: ['GET', 'POST']
 }));
+
 app.use(express.json());
 
 

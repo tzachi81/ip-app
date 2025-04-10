@@ -1,4 +1,7 @@
-const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+
+const isProduction = import.meta.env.VITE_ENV === 'production';
+
+const apiUrl = isProduction ? import.meta.env.VITE_API_URL : 'http://localhost:3000/api';
 //TODO: 
 // 1. Wrap as a service class, or
 // 2. Split these in two files: ipApi.ts and domainApi.ts
