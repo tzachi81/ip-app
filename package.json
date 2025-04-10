@@ -1,8 +1,0 @@
-{
-  "name": "ip-app",
-  "version": "1.0.0",
-  "main": "index.js",
-  "repository": "https://github.com/tzachi81/ip-app.git",
-  "author": "tzachi81 <tzahih@gmail.com>",
-  "license": "MIT"
-}
