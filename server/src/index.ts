@@ -18,7 +18,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 const devOrigins = ['http://localhost:5173', 'http://localhost:4173'];
-const allowedOrigins = (process.env.NODE_ENV === "production") ? [process.env.allowedOrigins] : devOrigins;
+const allowedOrigins = (process.env.NODE_ENV === "production") ? [process.env.ALLOWED_ORIGIN] : devOrigins;
 
 const corsOptions = {
     origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
