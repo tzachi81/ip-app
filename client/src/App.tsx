@@ -58,10 +58,8 @@ function App() {
     // so I added these checkups to remove the protocol prefix
     // and other suffix that may be applied
 
-    const cleanDomain =
-      domain.indexOf("://") > -1
-        ? domain.split("://")[1].split("/")[0].split("?")[0]
-        : domain;
+    const splitProtocol = domain.indexOf("://") > -1 ? domain.split("://")[1] : domain;
+    const cleanDomain = splitProtocol.indexOf("?") > -1 ? splitProtocol.split("?")[0].split("/")[0] : splitProtocol.split("/")[0];
 
     const isValidDomainPattern = (domainName: string) => {
       const domainPattern = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
