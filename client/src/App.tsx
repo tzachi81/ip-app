@@ -1,16 +1,16 @@
-import './App.css';
-import classes from './App.module.scss';
-import { useEffect, useState } from 'react';
+import "./App.css";
+import classes from "./App.module.scss";
+import { useEffect, useState } from "react";
 import {
   fetchDomainHistory,
   fetchHostAddresses,
   resolveDomain,
-} from './api/apiCalls';
-import { DomainsList } from './components/domainsList/DoaminsList';
+} from "./api/apiCalls";
+import { DomainsList } from "./components/domainsList/DoaminsList";
 
-import { ToastContainer, toast } from 'react-toastify';
-import { HostAddresses } from './components/hostAddresses/HostAddresses';
-import { IDomain } from './types/domain.types';
+import { ToastContainer, toast } from "react-toastify";
+import { HostAddresses } from "./components/hostAddresses/HostAddresses";
+import { IDomain } from "./types/domain.types";
 
 function App() {
   const [ipAddresses, setIpAddresses] = useState<any>(null);
@@ -18,15 +18,19 @@ function App() {
   const [, setDomainInput] = useState<string>('');
   const [domain, setDomain] = useState('');
 
-  const notify = (message: string) => toast(message);
+  const notifyInfo = (message: string) => toast(message, {type: 'info'});
+  const notifyError = (message: string) => toast(message, { type: 'error' });
+  const notifyWarn = (message: string) => toast(message, { type: 'warning' });
 
   useEffect(() => {
     const getIPAddresses = async () => {
       try {
         const data = await fetchHostAddresses();
         setIpAddresses(data);
-      } catch (error) {
-        console.error(error);
+        //For simplifying this, the api call can throw error as string only
+      } catch (error: string | unknown) {
+        notifyError(`${error}`);
+        console.error(`${error}`);
       }
     };
 
@@ -34,8 +38,9 @@ function App() {
       try {
         const history = await fetchDomainHistory();
         setDomainHistory(history);
-      } catch (error) {
-        console.error(error);
+      } catch (error: string | unknown) {
+        notifyError(`${error}`);
+        console.error(`${error}`);
       }
     };
 
@@ -54,8 +59,8 @@ function App() {
     // and other suffix that may be applied
 
     const cleanDomain =
-      domain.indexOf('://') > -1
-        ? domain.split('://')[1].split('/')[0]
+      domain.indexOf("://") > -1
+        ? domain.split("://")[1].split("/")[0].split("?")[0]
         : domain;
 
     const isValidDomainPattern = (domainName: string) => {
@@ -73,27 +78,26 @@ function App() {
       //TODO: add length check > 255 characters, and so on...
 
       if (!isValidDomainPattern(cleanDomain)) {
-        notify(`Invalid domain input: ${cleanDomain}`);
-        console.error('Invalid domain input.');
+        notifyError(`Invalid domain input: ${cleanDomain}`);
+        console.error("Invalid domain input.");
         return;
       }
 
-      // TODO: consider if check existing directly in the db is better
+      // TODO: consider if checking the existing domain name directly in the db is better
       if (isDomainExists(cleanDomain)) {
-        notify(
-          `The domain name is already in your history list: ${cleanDomain}`
-        );
-        console.log(
-          'The domain name is already in your history list.',
-          cleanDomain
+        notifyWarn(
+          `${cleanDomain} is already in your history list.`
         );
         return;
       }
       const result = await resolveDomain(cleanDomain);
       setDomainHistory([...domainHistory, result]);
-      setDomainInput('');
+      setDomainInput("");
+      notifyInfo(
+        `The domain name "${cleanDomain}" was successfully resolved to: ${result.ip}`
+      );
     } catch (error) {
-      setDomainInput('Invalid domain input');
+      setDomainInput("Invalid domain input");
       console.error(error);
     }
   };
@@ -114,20 +118,22 @@ function App() {
             <input
               autoFocus
               className={classes.input}
-              type='text'
+              type="text"
               value={domain}
               onChange={onInputChange}
-              placeholder='Domain name to resolve'
+              placeholder="Domain name to resolve"
               required
             />
-            <button className={classes.button} type='submit'>
+            <button className={classes.button} type="submit">
               Get IP
             </button>
           </form>
 
-          <ToastContainer position='bottom-center' closeOnClick theme='dark' />
+          <ToastContainer position="bottom-center" closeOnClick theme="dark" />
 
-          {domainHistory.length > 0 && <DomainsList domainHistory={domainHistory}/>}
+          {domainHistory.length > 0 && (
+            <DomainsList domainHistory={domainHistory} />
+          )}
         </div>
       </main>
     </>

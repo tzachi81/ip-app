@@ -1,7 +1,7 @@
 import {Router} from 'express';
 
 import {ipRoute} from './ip.route';
-import {domainsRoute} from './domains.route';
+import domainsRoute from './domains.route';
 
 const apiRouter = Router();
 

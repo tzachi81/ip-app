@@ -10,7 +10,7 @@ const apiUrl = isProduction ? import.meta.env.VITE_API_URL : 'http://localhost:3
 export const fetchHostAddresses = async () => {
     const response = await fetch(`${apiUrl}/ip`);
     if (!response.ok) {
-        throw new Error('Failed to fetch IP addresses');
+        throw new Error('Failed to fetch IP addresses.');
     }
     return response.json();
 };
@@ -26,7 +26,7 @@ export const resolveDomain = async (domain: string) => {
         body: JSON.stringify({ domain }),
     });
     if (!response.ok) {
-        throw new Error('Failed to resolve domain name');
+        throw new Error(`Failed to resolve domain '${domain}'.`);
     }
     return response.json();
 };
@@ -34,7 +34,7 @@ export const resolveDomain = async (domain: string) => {
 export const fetchDomainHistory = async () => {
     const response = await fetch(`${apiUrl}/domains/get`);
     if (!response.ok) {
-        throw new Error('Failed to fetch domain history');
+        throw new Error('Failed to fetch domain history.');
     }
     return response.json();
 };

@@ -1,30 +1,31 @@
 
 import { Router, Request, Response } from 'express';
-import { connectDB, getDatabase } from '../model/db/client';
 import { IDomain } from '../types/db.types';
 
 import dns from 'dns';
+import { attachDbToRequest } from '../middlewares/attachDbToRequest.middleware.';
 
-
-// Connect to MongoDB
-//TODO: add close connection function
-connectDB();
-
-export const domainsRoute = Router();
+const domainsRoute = Router();
 
 // Get domain history
-domainsRoute.get('/get', async (request: Request, response: Response) => {
-    const db = getDatabase();
-    const collection = db && db.collection<IDomain>('domainToIp');
-
-    const domains = await collection?.find().toArray();
-    response.json(domains);
+domainsRoute.get('/get', attachDbToRequest, async (request: Request, response: Response) => {
+    try{
+        const collection = request.db?.collection('domainToIp');
+        
+        const domains = await collection?.find({}).toArray();
+        
+        response.json(domains);
+    } catch(error: Error | unknown) {
+        let message = error instanceof Error ? error.message : error;
+        console.error('Error getting domain history:', message);
+        response.status(500).json({ error: 'Internal server error. Failed to get domain history', message });
+    } 
 });
 
 
 // Resolves the domain IP and 
 // saves the result to domainToIP DB collection
-domainsRoute.post('/resolve', async (request: Request, response: Response) => {
+domainsRoute.post('/resolve', attachDbToRequest, async (request: Request, response: Response) => {
 
     const { domain } = request.body; // Input from the user
 
@@ -33,21 +34,20 @@ domainsRoute.post('/resolve', async (request: Request, response: Response) => {
             return response.status(400).json({ error: 'Domain not found' });
         }
 
-        const db = getDatabase();
-
         try {
 
-            const collection = db && db.collection<IDomain>('domainToIp');
-
             const newDomain: IDomain = { domain, ip: address };
-            await collection?.insertOne(newDomain);
+            await request.db?.collection('domainToIp').insertOne(newDomain);
 
             response.json(newDomain);
-        } catch (error) {
-            console.error('Error saving to database:', error);
-            response.status(500).json({ error: 'Internal server error' });
+
+        } catch(error: Error | unknown) {
+            let message = error instanceof Error ? error.message : error;
+
+            console.error('Error saving to database:', message);
+            response.status(500).json({ error: 'Failed to save the name to database.', message });
         }
-        // TODO: Close the database connection after that
     });
 });
 
+export default domainsRoute;
