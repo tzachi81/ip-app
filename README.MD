@@ -1,4 +1,6 @@
 # Domain-IP resolver
+## Description
+This React + express app shows the host machine's internal and public IP, resolves a given domain name to an IP address, and shows the history of the previous resolved names
 
 ## Production Host (Vercel)
 >I Deployed and host this app on [Vercel](https://vercel.com) platform<br>
@@ -6,7 +8,7 @@
 - Server side (an example of ip endpoint call), navigate to: https://doamin-ip-server.vercel.app/api/ip
 
 ## Data Base
->I set a MongoDB database collection for storin and retrieving the history requested
+>I set a MongoDB database collection for storing and retrieving the history requested
 - collection reference path : 
 `NextJS-Apps > cluster0: domainToIp.domainToIp`
 
