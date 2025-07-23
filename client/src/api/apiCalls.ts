@@ -1,3 +1,4 @@
+import { IDomain } from "../types/domain.types";
 
 const isProduction = import.meta.env.VITE_ENV === 'production';
 
@@ -37,4 +38,21 @@ export const fetchDomainHistory = async () => {
         throw new Error('Failed to fetch domain history.');
     }
     return response.json();
+};
+
+export const getCleanDomainName = (domain: string) => {
+    const splitProtocol = domain.indexOf("://") > -1 ? domain.split("://")[1] : domain;
+    const cleanDomain = splitProtocol.indexOf("?") > -1 ? splitProtocol.split("?")[0].split("/")[0] : splitProtocol.split("/")[0];
+    return cleanDomain.trim();
+};
+
+export const isValidDomainPattern = (domainName: string) => {
+    const domainPattern = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return domainPattern.test(domainName);
+};
+
+export const isDomainExists = (domainName: string, domainHistory: IDomain[]) => {
+    return domainHistory.some(
+        (domainObj: IDomain) => domainObj.domain === domainName
+    );
 };

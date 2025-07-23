@@ -4,30 +4,34 @@ import { useEffect, useState } from "react";
 import {
   fetchDomainHistory,
   fetchHostAddresses,
+  getCleanDomainName,
+  isDomainExists,
+  isValidDomainPattern,
   resolveDomain,
 } from "./api/apiCalls";
 import { DomainsList } from "./components/domainsList/DoaminsList";
 
 import { ToastContainer, toast } from "react-toastify";
 import { HostAddresses } from "./components/hostAddresses/HostAddresses";
-import { IDomain } from "./types/domain.types";
+import { AppLoader } from "./components/appLoader/AppLoader";
 
 function App() {
   const [ipAddresses, setIpAddresses] = useState<any>(null);
   const [domainHistory, setDomainHistory] = useState<any[]>([]);
-  const [, setDomainInput] = useState<string>('');
-  const [domain, setDomain] = useState('');
+  const [fetchingHistory, setFetchingHistory] = useState<boolean>(false);
+  const [, setDomainInput] = useState<string>("");
+  const [domain, setDomain] = useState("");
 
-  const notifyInfo = (message: string) => toast(message, {type: 'info'});
-  const notifyError = (message: string) => toast(message, { type: 'error' });
-  const notifyWarn = (message: string) => toast(message, { type: 'warning' });
+  const notifyInfo = (message: string) => toast(message, { type: "info" });
+  const notifyError = (message: string) => toast(message, { type: "error" });
+  const notifyWarn = (message: string) => toast(message, { type: "warning" });
 
   useEffect(() => {
     const getIPAddresses = async () => {
       try {
         const data = await fetchHostAddresses();
         setIpAddresses(data);
-        //For simplifying this, the api call can throw error as string only
+        //To simplify things, the api will throw an error as string only
       } catch (error: string | unknown) {
         notifyError(`${error}`);
         console.error(`${error}`);
@@ -36,11 +40,14 @@ function App() {
 
     const getDomainHistory = async () => {
       try {
+        setFetchingHistory(true);
         const history = await fetchDomainHistory();
         setDomainHistory(history);
       } catch (error: string | unknown) {
         notifyError(`${error}`);
         console.error(`${error}`);
+      } finally {
+        setFetchingHistory(false);
       }
     };
 
@@ -54,38 +61,22 @@ function App() {
   };
   const handleDomainSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // I had an issue with the domain input sent to the server and returned null values,
-    // so I added these checkups to remove the protocol prefix
-    // and other suffix that may be applied
-
-    const splitProtocol = domain.indexOf("://") > -1 ? domain.split("://")[1] : domain;
-    const cleanDomain = splitProtocol.indexOf("?") > -1 ? splitProtocol.split("?")[0].split("/")[0] : splitProtocol.split("/")[0];
-
-    const isValidDomainPattern = (domainName: string) => {
-      const domainPattern = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      return domainPattern.test(domainName);
-    };
-
-    const isDomainExists = (domainName: string) => {
-      return domainHistory.some(
-        (domainObj: IDomain) => domainObj.domain === domainName
-      );
-    };
 
     try {
-      //TODO: add length check > 255 characters, and so on...
+      const cleanDomain = getCleanDomainName(domain);
 
       if (!isValidDomainPattern(cleanDomain)) {
-        notifyError(`Invalid domain input: ${cleanDomain}`);
+        notifyError(
+          `Invalid domain input: "${cleanDomain}".
+          Try to use a valid pattern like: "www.mydomain.com"`
+        );
         console.error("Invalid domain input.");
         return;
       }
 
-      // TODO: consider if checking the existing domain name directly in the db is better
-      if (isDomainExists(cleanDomain)) {
-        notifyWarn(
-          `${cleanDomain} is already in your history list.`
-        );
+      // Consider if checking the existing domain name directly in the db is better
+      if (isDomainExists(cleanDomain, domainHistory)) {
+        notifyWarn(`${cleanDomain} is already in your history list.`);
         return;
       }
       const result = await resolveDomain(cleanDomain);
@@ -98,41 +89,57 @@ function App() {
       setDomainInput("Invalid domain input");
       console.error(error);
     }
+    finally {
+      setTimeout(() => setDomain(""), 500);
+    }
   };
 
   return (
     <>
       <header>
-        <h1>Resolve Domain Names</h1>
+        <h1>Domain Names Resolver</h1>
       </header>
 
       <main>
         <HostAddresses hostAddresses={ipAddresses} />
 
-        <div className={classes.content}>
-          <h2>Domain Resolver</h2>
+        <div className={classes.formContainer}>
+          <h2>Resolve Domain's IP</h2>
           <form className={classes.form} onSubmit={handleDomainSubmit}>
-            {/* <label className={classes.label}>Resolve Domain Name</label> */}
             <input
+              name="domainName"
               autoFocus
               className={classes.input}
               type="text"
               value={domain}
               onChange={onInputChange}
-              placeholder="Domain name to resolve"
+              placeholder="Domain name..."
               required
             />
             <button className={classes.button} type="submit">
-              Get IP
+              Resolve
             </button>
           </form>
+        </div>
 
-          <ToastContainer position="bottom-center" closeOnClick theme="dark" />
-
-          {domainHistory.length > 0 && (
+        <div className={classes.resolvedHistory}>
+          <h2>Resolved History</h2>
+          {!fetchingHistory && domainHistory.length > 0 ? (
             <DomainsList domainHistory={domainHistory} />
+          ) : (
+            <div className={classes.fetchingHistory}>
+              <AppLoader />
+              <span>Getting history from database...</span>
+            </div>
           )}
         </div>
+
+        <ToastContainer
+          position="bottom-center"
+          closeOnClick
+          theme="dark"
+          toastClassName={classes.appToast}
+        />
       </main>
     </>
   );
