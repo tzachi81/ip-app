@@ -87,9 +87,9 @@ function App() {
       );
     } catch (error) {
       setDomainInput("Invalid domain input");
+      notifyError(`${error}`);
       console.error(error);
-    }
-    finally {
+    } finally {
       setTimeout(() => setDomain(""), 500);
     }
   };
