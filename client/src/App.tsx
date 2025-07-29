@@ -87,7 +87,7 @@ function App() {
       );
     } catch (error) {
       setDomainInput("Invalid domain input");
-      notifyError(`${error}`);
+      notifyError(`${error}\nTry to use a valid pattern like: "www.mydomain.com"`);
       console.error(error);
     } finally {
       setTimeout(() => setDomain(""), 500);
