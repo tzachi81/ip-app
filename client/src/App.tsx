@@ -21,7 +21,7 @@ function App() {
   const [, setDomainInput] = useState<string>("");
   const [domain, setDomain] = useState("");
 
-  const notifyInfo = (message: string) => toast(message, { type: "info" });
+  // const notifyInfo = (message: string) => toast(message, { type: "info" });
   const notifySuccess = (message: string) => toast(message, { type: "success" });
   const notifyError = (message: string) => toast(message, { type: "error" });
   const notifyWarn = (message: string) => toast(message, { type: "warning" });
