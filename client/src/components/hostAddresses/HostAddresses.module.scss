@@ -1,6 +1,17 @@
 .hostAddresses {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-start;
+  border: 1px dashed rgb(123, 165, 183);
+  padding: 7px;
   border-bottom: 1px solid #ccc;
   margin-bottom: 17px;
+  .header {
+    margin-bottom: 7px;
+    margin-top: 0;
+  }
+  
   p {
     margin: 7px 0;
   }

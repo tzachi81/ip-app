@@ -14,7 +14,6 @@ ipRoute.get('/', (request: Request, response: Response) => {
             .flat()
             .find(osInterface => osInterface?.family === 'IPv4' && !osInterface.internal);
 
-        //TODO: check efficiency.. right way to get the public IP address.
         const publicIP = request.headers['x-forwarded-for'] || request.socket.remoteAddress;
 
         response.status(200).json({

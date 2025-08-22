@@ -10,9 +10,9 @@ export const HostAddresses: React.FC<IDomainHistory> = ({ hostAddresses }) => {
     <>
       {hostAddresses && (
         <div className={classes.hostAddresses}>
-          <h2>Host IP Addresses</h2>
-          <p>Public: {hostAddresses.publicIP}</p>
-          <p>Internal: {hostAddresses.internalIP}</p>
+          <h3 className={classes.header}>Host IP Addresses</h3>
+          <span>Public: {hostAddresses.publicIP}</span>
+          <span>Internal: {hostAddresses.internalIP}</span>
         </div>
       )}
     </>

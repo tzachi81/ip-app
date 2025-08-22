@@ -1,4 +1,3 @@
-import "./App.css";
 import classes from "./App.module.scss";
 import { useEffect, useState } from "react";
 import {
@@ -23,6 +22,7 @@ function App() {
   const [domain, setDomain] = useState("");
 
   const notifyInfo = (message: string) => toast(message, { type: "info" });
+  const notifySuccess = (message: string) => toast(message, { type: "success" });
   const notifyError = (message: string) => toast(message, { type: "error" });
   const notifyWarn = (message: string) => toast(message, { type: "warning" });
 
@@ -31,7 +31,6 @@ function App() {
       try {
         const data = await fetchHostAddresses();
         setIpAddresses(data);
-        //To simplify things, the api will throw an error as string only
       } catch (error: string | unknown) {
         notifyError(`${error}`);
         console.error(`${error}`);
@@ -42,7 +41,7 @@ function App() {
       try {
         setFetchingHistory(true);
         const history = await fetchDomainHistory();
-        setDomainHistory(history);
+        setDomainHistory(history.reverse());
       } catch (error: string | unknown) {
         notifyError(`${error}`);
         console.error(`${error}`);
@@ -80,9 +79,9 @@ function App() {
         return;
       }
       const result = await resolveDomain(cleanDomain);
-      setDomainHistory([...domainHistory, result]);
+      setDomainHistory([...domainHistory, result].reverse());
       setDomainInput("");
-      notifyInfo(
+      notifySuccess(
         `The domain name "${cleanDomain}" was successfully resolved to: ${result.ip}`
       );
     } catch (error) {
@@ -95,9 +94,9 @@ function App() {
   };
 
   return (
-    <>
+    <div className={classes.content}>
       <header>
-        <h1>Domain Names Resolver</h1>
+        <h1>Domain-IP Resolver</h1>
       </header>
 
       <main>
@@ -123,7 +122,7 @@ function App() {
         </div>
 
         <div className={classes.resolvedHistory}>
-          <h2>Resolved History</h2>
+          <h2>History</h2>
           {!fetchingHistory && domainHistory.length > 0 ? (
             <DomainsList domainHistory={domainHistory} />
           ) : (
@@ -141,7 +140,7 @@ function App() {
           toastClassName={classes.appToast}
         />
       </main>
-    </>
+    </div>
   );
 }
 

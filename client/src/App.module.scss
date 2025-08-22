@@ -1,11 +1,19 @@
 .content {
-  margin-top: 25px;
-
+  font-family: sans-serif;
+  margin-top: 17px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(213, 219, 222, 0.1);
 }
 
-
+header h1{
+  display: flex;
+  flex-direction: column;
+  justify-self: center;
+  
+}
 .formContainer {
   display: flex;
   flex-direction: column;
@@ -58,8 +66,8 @@
   gap: 17px;
 }
 
-.appToast{
+.appToast {
   width: 100%;
   min-width: 33vw;
-  margin: 0 auto; 
+  margin: 0 auto;
 }
