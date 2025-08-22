@@ -1,22 +1,29 @@
 .listContainer {
   display: flex;
   flex-direction: column;
-  width: 100%;
+
+  header h2, h3, h4, h5, h6 {
+    justify-self: center;
+  }
 }
 .listHeader {
+  margin: 7px 27px 7px 27px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #ccc;
 }
 .list {
+  display: flex;
+  flex-direction: column;
   border: 1px solid #ccc;
   display: flex;
   flex-direction: column;
   list-style-type: none;
   padding: 7px 12px;
-  max-height: 500px;
+  margin-top: 0;
   overflow-y: auto;
+  flex-grow: 1; /* This makes the list expand to fill available space */ 
+height: 45vh;
 }
 .listItem {
   padding: 10px;

@@ -13,6 +13,7 @@ import { DomainsList } from "./components/domainsList/DoaminsList";
 import { ToastContainer, toast } from "react-toastify";
 import { HostAddresses } from "./components/hostAddresses/HostAddresses";
 import { AppLoader } from "./components/appLoader/AppLoader";
+import { Form } from "./components/form/Form";
 
 function App() {
   const [ipAddresses, setIpAddresses] = useState<any>(null);
@@ -22,7 +23,8 @@ function App() {
   const [domain, setDomain] = useState("");
 
   // const notifyInfo = (message: string) => toast(message, { type: "info" });
-  const notifySuccess = (message: string) => toast(message, { type: "success" });
+  const notifySuccess = (message: string) =>
+    toast(message, { type: "success" });
   const notifyError = (message: string) => toast(message, { type: "error" });
   const notifyWarn = (message: string) => toast(message, { type: "warning" });
 
@@ -88,7 +90,9 @@ function App() {
       );
     } catch (error) {
       setDomainInput("Invalid domain input");
-      notifyError(`${error}\nTry to use a valid pattern like: "www.mydomain.com"`);
+      notifyError(
+        `${error}\nTry to use a valid pattern like: "www.mydomain.com"`
+      );
       console.error(error);
     } finally {
       setTimeout(() => setDomain(""), 500);
@@ -104,27 +108,13 @@ function App() {
       <main>
         <HostAddresses hostAddresses={ipAddresses} />
 
-        <div className={classes.formContainer}>
-          <h2>Resolve Domain's IP</h2>
-          <form className={classes.form} onSubmit={handleDomainSubmit}>
-            <input
-              name="domainName"
-              autoFocus
-              className={classes.input}
-              type="text"
-              value={domain}
-              onChange={onInputChange}
-              placeholder="Domain name..."
-              required
-            />
-            <button className={classes.button} type="submit">
-              Resolve
-            </button>
-          </form>
-        </div>
+        <Form
+          onInputChange={onInputChange}
+          domain={domain}
+          handleDomainSubmit={handleDomainSubmit}
+        />
 
         <div className={classes.resolvedHistory}>
-          <h2>History</h2>
           {!fetchingHistory && domainHistory.length > 0 ? (
             <DomainsList domainHistory={domainHistory} />
           ) : (
