@@ -79,7 +79,9 @@ function App() {
         return;
       }
       const result = await resolveDomain(cleanDomain);
-      setDomainHistory([...domainHistory, result].reverse());
+      const reversedHistory = [...domainHistory, result].reverse();
+
+      setDomainHistory(reversedHistory);
       setDomainInput("");
       notifySuccess(
         `The domain name "${cleanDomain}" was successfully resolved to: ${result.ip}`
