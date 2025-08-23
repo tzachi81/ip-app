@@ -22,9 +22,7 @@ function App() {
   const [, setDomainInput] = useState<string>("");
   const [domain, setDomain] = useState("");
 
-  // const notifyInfo = (message: string) => toast(message, { type: "info" });
-  const notifySuccess = (message: string) =>
-    toast(message, { type: "success" });
+  const notifySuccess = (message: string) => toast(message, { type: "success" });
   const notifyError = (message: string) => toast(message, { type: "error" });
   const notifyWarn = (message: string) => toast(message, { type: "warning" });
 
@@ -43,7 +41,7 @@ function App() {
       try {
         setFetchingHistory(true);
         const history = await fetchDomainHistory();
-        setDomainHistory(history.reverse());
+        setDomainHistory(history);
       } catch (error: string | unknown) {
         notifyError(`${error}`);
         console.error(`${error}`);
@@ -75,15 +73,14 @@ function App() {
         return;
       }
 
-      // Consider if checking the existing domain name directly in the db is better
       if (isDomainExists(cleanDomain, domainHistory)) {
         notifyWarn(`${cleanDomain} is already in your history list.`);
         return;
       }
       const result = await resolveDomain(cleanDomain);
-      const reversedHistory = [...domainHistory, result].reverse();
+      const updatedHistoryList = [result, ...domainHistory];
 
-      setDomainHistory(reversedHistory);
+      setDomainHistory(updatedHistoryList);
       setDomainInput("");
       notifySuccess(
         `The domain name "${cleanDomain}" was successfully resolved to: ${result.ip}`

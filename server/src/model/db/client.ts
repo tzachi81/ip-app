@@ -13,7 +13,6 @@ export const connectDB = async () => {
     try {
 
         if (db) {
-            // console.log('Using cached DB');
             return db;
         } else {
             client = await MongoClient.connect(dbUri);

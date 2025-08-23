@@ -8,8 +8,6 @@ interface IDomainItem {
 export const DomainItem: React.FC<IDomainItem> = ({ domainItem }) => {
   
   const { domain, ip } = domainItem;
-  //I added the anchor tag just to 
-  //make it interactive for the user
   
   return (
     <li className={classes.listItem}>

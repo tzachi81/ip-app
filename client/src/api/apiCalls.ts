@@ -3,9 +3,7 @@ import { IDomain } from "../types/domain.types";
 const isProduction = import.meta.env.VITE_ENV === 'production';
 
 const apiUrl = isProduction ? import.meta.env.VITE_API_URL : 'http://localhost:3000/api';
-//TODO: 
-// 1. Wrap as a service class, or
-// 2. Split these in two files: ipApi.ts and domainApi.ts
+
 
 //'/api/ip'
 export const fetchHostAddresses = async () => {
@@ -32,12 +30,14 @@ export const resolveDomain = async (domain: string) => {
     return response.json();
 };
 
-export const fetchDomainHistory = async () => {
+export const fetchDomainHistory = async (): Promise<IDomain[]> => {
     const response = await fetch(`${apiUrl}/domains/get`);
     if (!response.ok) {
         throw new Error('Failed to fetch domain history.');
     }
-    return response.json();
+    const data: IDomain[] = await response.json();
+
+    return data.reverse();
 };
 
 export const getCleanDomainName = (domain: string) => {

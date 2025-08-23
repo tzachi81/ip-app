@@ -21,7 +21,7 @@ export const DomainsList: React.FC<IDomainHistory> = ({ domainHistory }) => {
         <span>IP Address</span>
       </div>
       <ul className={classes.list}>
-        {domainHistory.reverse().map((domainItem) => (
+        {domainHistory.map((domainItem) => (
           <DomainItem key={domainItem.domain} domainItem={domainItem} />
         ))}
       </ul>
